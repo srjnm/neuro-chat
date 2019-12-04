@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <title>Decentralized chat</title>
+  <style>
+	p{text-shadow: 0 0px 30px #00ff9f;letter-spacing:1px;text-align:center;font-family:Tomorrow,monospace,serif;color:#00ff9f 	;font-size:1.4rem}
+#input { border-bottom: 1px solid #00ff9f; background-color: #383838; padding:
+    0.25em; outline: 0;}
+    #input::before { content: "> "; color:#00ff9f;text-shadow: 0 0 10px cyan;}
+    body { background-color: #333; font-size: 1.5em; padding: 0em 0.25em; }
+    body,html{height:100%}
+    pre { color: #00b8ff; white-space: pre-wrap; word-wrap: break-word; margin:1rem
+        1rem;text-shadow: 0 0 39px #001eff; }
+    .subheading{color:#0BC4CF;text-shadow:0 0 30px	#0BC4CF}
+    .container{
+        /*height:100%;*/
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+    #log{text-align:center;}
+  </style>
+  <script>
+    function log(message) {
+      document.getElementById("log").textContent += message + "\n";
+    }
+	function headertext(msg){
+		document.getElementById("kek").textContent += msg + "\n";
+	}
+  </script>
+  <!-- import bugout -->
+  <script src="https://chr15m.github.io/bugout/bugout.min.js" type="application/javascript"></script>
+  <link href="https://fonts.googleapis.com/css?family=Tomorrow&display=swap"
+      rel="stylesheet">
+</head>
+<body>
+  <p id="kek"></p>
+  <p class="subheading">A completely decentralised p2p chat right in your browser</p>
+  <div class="container">
+  <pre id="log"></pre>
+  </div>
+  <pre id="input" contenteditable="true" autofocus></pre> 
+</body>
+<script>
+  headertext("Welcome to NeuroChat");
+// create room
+var b = Bugout("blahblahchat");
+// join room
+b.on("seen", function(address) { log(address + " [connected]"); });
+  log(b.address() + " [me]");
+//recive message
+b.on("message", function(address, message) {
+  log(address + ": " + message);
+});
+//send message
+document.getElementById("input").onkeydown = function(ev) {
+    if (ev.keyCode == 13) {
+      if (b.lastwirecount) {
+        b.send(ev.target.textContent);
+        ev.target.textContent = "";
+      }
+      ev.preventDefault();
+    }
+  }
+</script>
+</html>
