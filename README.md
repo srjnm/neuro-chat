@@ -1,2 +1,2 @@
-# neurochat
-decentralised chat app in the browser
+# Neurochat
+Decentralised Chat App right in your Browser.
