@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Decentralized chat</title>
+    <style>
+      p {
+        text-shadow: 0 0px 30px #E44652;
+        letter-spacing: 1px;
+        text-align: center;
+        font-family: Tomorrow, monospace, serif;
+        color: #E44652;
+        font-size: 1.4rem;
+      }
+      #input {
+        display: inline-block;
+        border-bottom: 1px solid #E44652;
+        background-color: #06436b;
+        padding: 0.25em;
+        outline: 0;
+        position: absolute;
+        margin: 0 4vw;
+      }
+      #input::before {
+        content: "> ";
+        color: #E44652;
+        text-shadow: 0 0 10px #E44652;
+      }
+      body {
+        background-color: #043353;
+        font-size: 1.5em;
+        padding: 0em 0.25em;
+      }
+      body,
+      html {
+        height: 94%;
+      }
+      pre {
+        color: #00b8ff;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 1rem 1rem;
+        text-shadow: 0 0 39px #00a2ff;
+      }
+      .subheading {
+        color: #FAF8F0;
+        text-shadow: 0 0 30px #FAF8F0;
+      }
+      #log {
+        text-align: center;
+      }
+      .main-container {
+        display: flex;
+        height: 6%;
+        width: 100%;
+        align-items: flex-end;
+      }
+      .main-container > pre {
+        width: 82vw;
+      }
+
+      #particles-js canvas {
+        display: block;
+        vertical-align: bottom;
+        -webkit-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+        -webkit-transition: opacity 0.8s ease, -webkit-transform 1.4s ease;
+        transition: opacity 0.8s ease, transform 1.4s ease;
+      }
+
+      #particles-js {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        z-index: -10;
+        top: 0;
+        left: 0;
+      }
+    </style>
+    <script>
+      function log(message) {
+        document.getElementById("log").innerHTML += message;
+      }
+      function headertext(msg) {
+        document.getElementById("kek").textContent += msg + "\n";
+      }
+
+      var rn = sessionStorage.getItem("roomName");
+    </script>
+    <!-- import bugout -->
+    <script
+      src="https://chr15m.github.io/bugout/bugout.min.js"
+      type="application/javascript"
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Tomorrow&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="particles-js"></div>
+    <p id="kek"></p>
+    <p class="subheading">
+      A completely decentralised p2p chat right in your browser
+    </p>
+    <div class="container">
+      <pre id="log"></pre>
+      
+    </div>
+    <div class="main-container">
+      <pre id="input" contenteditable="true" autofocus></pre>
+    </div>
+
+    <script src="particles.js"></script>
+    <script src="app.js"></script>
+  </body>
+  <script>
+    headertext("Welcome to NeuroChat");
+    // create room
+    var b = Bugout(rn);
+    
+    // join room
+    b.on("seen", function(address) {
+      log(address + "[joined]<br>");
+    });
+    log(b.address() + " [me]<br>");
+    //recieve message
+    b.on("message", function(address, message) {
+      log(address + ": <br><span style='color: #FAF8F0;''>" + message + "</span> <br>");
+    });
+    //send message
+    document.getElementById("input").onkeydown = function(ev) {
+      if (ev.keyCode == 13) {
+        if (b.lastwirecount) {
+          b.send(ev.target.textContent);
+          ev.target.textContent = "";
+        }
+        ev.preventDefault();
+      }
+    };
+  </script>
+</html>
